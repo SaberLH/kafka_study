@@ -1,13 +1,12 @@
 package com.imooc.lihu.kafka.admin;
 
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.*;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author lihu
@@ -30,7 +29,7 @@ public class AdminSample {
     /**
      * 创建topic实例
      */
-    public static void createTopic(){
+    public static void createTopic() throws InterruptedException {
 
         AdminClient adminClient = adminClient();
         // 副本因子
@@ -41,11 +40,25 @@ public class AdminSample {
         System.out.println("CreateTopicsResult:" + topics);
     }
 
+    /**
+     * 获取Topic列表
+     */
+    public static void topicLists() throws ExecutionException, InterruptedException {
 
-    public static void main(String[] args) {
+        AdminClient adminClient = adminClient();
+        ListTopicsResult listTopicsResult = adminClient.listTopics();
+        Set<String> names = listTopicsResult.names().get();
+        // 打印names
+        names.stream().forEach(System.out::println);
+    }
+
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
 //        System.out.println("adminClient:" + AdminSample.adminClient());
 
-        createTopic();
+//        createTopic();
+
+        topicLists();
     }
 }
